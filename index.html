@@ -47,7 +47,7 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
         }
         .champion-info-container {
             display: flex;
@@ -61,14 +61,14 @@
             color: white;
             text-align: center;
             padding: 5px;
-            font-size: 18px; /* Reduced slightly */
+            font-size: 22px;
             font-weight: bold;
             border-radius: 12px;
             width: 100%;
         }
         .champion-img {
-            width: 90px; /* Slightly smaller for balance */
-            height: 90px;
+            width: 100px;
+            height: 100px;
             display: block;
             margin: 10px auto;
             border-radius: 10px;
@@ -84,36 +84,146 @@
             width: 50%;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Left-align everything */
-            margin-top: 5px; /* Adjusted spacing */
+            align-items: center;
         }
         .items-title {
             color: #a2d2ff;
             font-weight: bold;
-            font-size: 13px; /* Adjusted for better fit */
+            font-size: 12px; /* Reduced to 50% */
             margin-bottom: 5px;
-            text-align: left;
         }
         .item {
             display: flex;
             align-items: center;
-            margin-top: 8px;
-            gap: 8px;
+            margin-top: 10px;
+            gap: 5px; /* Adjusted for better spacing */
         }
         .item img {
-            width: 40px; /* Reduced for better proportion */
-            height: 40px;
+            width: 25px; /* Reduced to 50% */
+            height: 25px; /* Reduced to 50% */
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        .components {
+            display: flex;
+            gap: 3px; /* Adjusted for better spacing */
+        }
+        .components img {
+            width: 15px; /* Reduced to 50% */
+            height: 15px; /* Reduced to 50% */
             border-radius: 5px;
             object-fit: cover;
         }
         .item b {
-            font-size: 11px; /* Adjusted to fit well */
-            text-align: left;
+            font-size: 10px; /* Reduced to 50% */
         }
-        .components {
-            display: flex;
-            gap: 5px;
-            margin-left: 50px; /* Balanced spacing */
+    </style>
+</head>
+<body>
+
+<h2>Search Champion 🔍</h2>
+<input type="text" class="search-box" id="searchInput" placeholder="Type champion name(s)..." onkeyup="searchChampion()">
+
+<div id="championResult" class="champion-container"></div>
+
+<script>
+const champions = {
+    "ambessa": {
+        "image": "assets/champions/ambessa.jpg",
+        "info": "Physical damage, omnivamp",
+        "items": [
+            {
+                "name": "Bloodthirster",
+                "image": "assets/items/bloodthirster.jpg",
+                "components": [
+                    "assets/components/bfsword.jpg",
+                    "assets/components/netragon_cloak.png"
+                ]
+            },
+            {
+                "name": "Titan’s Resolve",
+                "image": "assets/items/titans_resolve.png",
+                "components": [
+                    "assets/components/chain_vest.jpg",
+                    "assets/components/recurve_bow.png"
+                ]
+            },
+            {
+                "name": "Sterak’s Gage",
+                "image": "assets/items/steraks_gage.jpg",
+                "components": [
+                    "assets/components/bfsword.jpg",
+                    "assets/components/giants_belt.jpg"
+                ]
+            }
+        ]
+    },
+    "akali": {
+        "image": "assets/champions/akali.jpg",
+        "info": "Magic damage",
+        "items": [
+            {
+                "name": "Bloodthirster",
+                "image": "assets/items/bloodthirster.jpg",
+                "components": [
+                    "assets/components/bfsword.jpg",
+                    "assets/components/netragon_cloak.png"
+                ]
+            },
+            {
+                "name": "Titan’s Resolve",
+                "image": "assets/items/titans_resolve.png",
+                "components": [
+                    "assets/components/chain_vest.jpg",
+                    "assets/components/recurve_bow.png"
+                ]
+            },
+            {
+                "name": "Sterak’s Gage",
+                "image": "assets/items/steraks_gage.jpg",
+                "components": [
+                    "assets/components/bfsword.jpg",
+                    "assets/components/giants_belt.jpg"
+                ]
+            }
+        ]
+    }
+};
+
+function searchChampion() {
+    let input = document.getElementById("searchInput").value.trim().toLowerCase().split(" ");
+    let resultDiv = document.getElementById("championResult");
+    resultDiv.innerHTML = "";
+
+    Object.keys(champions).forEach(champName => {
+        if (input.some(searchTerm => searchTerm.length >= 3 && champName.includes(searchTerm))) {
+            let champ = champions[champName];
+            let champHtml = `
+                <div class="champion-card">
+                    <div class="champion-info-container">
+                        <div class="champion-name-box">${champName.charAt(0).toUpperCase() + champName.slice(1)}</div>
+                        <img src="${champ.image}" alt="${champName}" class="champion-img">
+                        <p class="champion-info">${champ.info}</p>
+                    </div>
+                    <div class="items-container">
+                        <div class="items-title">Recommended Items</div>
+                        ${champ.items.map(item => `
+                            <div class="item">
+                                <img src="${item.image}" alt="${item.name}">
+                                <b>${item.name}</b>
+                                <div class="components">
+                                    <img src="${item.components[0]}" alt="Component 1">
+                                    <img src="${item.components[1]}" alt="Component 2">
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            resultDiv.innerHTML += champHtml;
         }
-        .components img {
-            width: 25px; /* Adjusted to be p
+    });
+}
+</script>
+
+</body>
+</html>
