@@ -154,36 +154,6 @@ const champions = {
                 ]
             }
         ]
-    },
-    "akali": {
-        "image": "assets/champions/akali.jpg",
-        "info": "Magic damage",
-        "items": [
-            {
-                "name": "Bloodthirster",
-                "image": "assets/items/bloodthirster.jpg",
-                "components": [
-                    "assets/components/bfsword.jpg",
-                    "assets/components/netragon_cloak.png"
-                ]
-            },
-            {
-                "name": "Titan’s Resolve",
-                "image": "assets/items/titans_resolve.png",
-                "components": [
-                    "assets/components/chain_vest.jpg",
-                    "assets/components/recurve_bow.png"
-                ]
-            },
-            {
-                "name": "Sterak’s Gage",
-                "image": "assets/items/steraks_gage.jpg",
-                "components": [
-                    "assets/components/bfsword.jpg",
-                    "assets/components/giants_belt.jpg"
-                ]
-            }
-        ]
     }
 };
 
@@ -201,6 +171,21 @@ function searchChampion() {
                         <div class="champion-name-box">${champName.charAt(0).toUpperCase() + champName.slice(1)}</div>
                         <img src="${champ.image}" alt="${champName}" class="champion-img">
                         <p class="champion-info">${champ.info}</p>
+                    </div>
+                    <div class="items-container">
+                        <div class="items-title">Recommended Items</div>
+                        ${champ.items.map(item => `
+                            <div class="item">
+                                <img src="${item.image}" alt="${item.name}">
+                                <div>
+                                    <b>${item.name}</b>
+                                    <div class="components">
+                                        <img src="${item.components[0]}" alt="Component 1">
+                                        <img src="${item.components[1]}" alt="Component 2">
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>`;
             resultDiv.innerHTML += champHtml;
