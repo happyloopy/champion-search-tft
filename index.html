@@ -60,6 +60,13 @@
             margin: 10px auto;
             border-radius: 10px;
         }
+        .champion-info {
+            font-size: 12px;
+            font-style: italic;
+            text-align: center;
+            margin-top: -5px;
+            color: #555;
+        }
         .item {
             display: flex;
             align-items: center;
@@ -92,6 +99,7 @@
 const champions = {
     "ambessa": {
         "image": "assets/champions/ambessa.jpg",
+        "info": "Physical damage, omnivamp",
         "items": [
             {
                 "name": "Bloodthirster",
@@ -120,7 +128,8 @@ const champions = {
         ]
     },
     "akali": {
-        "image": "assets/champions/akali.jpeg",
+        "image": "assets/champions/akali.jpg",
+        "info": "Magic damage",
         "items": [
             {
                 "name": "Bloodthirster",
@@ -162,6 +171,7 @@ function searchChampion() {
                 <div class="champion-card">
                     <div class="champion-name-box">${champName.charAt(0).toUpperCase() + champName.slice(1)}</div>
                     <img src="${champ.image}" alt="${champName}" class="champion-img">
+                    <p class="champion-info">${champ.info}</p>
                     <h4>Recommended Items</h4>
             `;
 
