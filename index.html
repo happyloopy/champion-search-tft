@@ -86,14 +86,10 @@
             align-items: center;
         }
         .items-title {
-            background: #a2d2ff;
-            color: white;
-            padding: 5px;
-            font-size: 18px;
+            color: #a2d2ff;
             font-weight: bold;
-            border-radius: 12px;
-            text-align: center;
-            width: 100%;
+            font-size: 16px;
+            margin-bottom: 5px;
         }
         .item {
             display: flex;
@@ -190,35 +186,6 @@ const champions = {
         ]
     }
 };
-
-function searchChampion() {
-    let input = document.getElementById("searchInput").value.trim().toLowerCase().split(" ");
-    let resultDiv = document.getElementById("championResult");
-    resultDiv.innerHTML = "";
-
-    Object.keys(champions).forEach(champName => {
-        if (input.some(searchTerm => searchTerm.length >= 3 && champName.includes(searchTerm))) {
-            let champ = champions[champName];
-            let champHtml = `
-                <div class="champion-card">
-                    <div class="champion-info-container">
-                        <div class="champion-name-box">${champName.charAt(0).toUpperCase() + champName.slice(1)}</div>
-                        <img src="${champ.image}" alt="${champName}" class="champion-img">
-                        <p class="champion-info">${champ.info}</p>
-                    </div>
-                    <div class="items-container">
-                        <div class="items-title">Recommended Items</div>
-                        ${champ.items.map(item => `
-                            <div class="item">
-                                <img src="${item.image}" alt="${item.name}">
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>`;
-            resultDiv.innerHTML += champHtml;
-        }
-    });
-}
 </script>
 
 </body>
