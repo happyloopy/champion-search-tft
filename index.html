@@ -42,7 +42,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: left;
-            width: 393px; /* Adjusted for iPhone 15 viewport */
+            width: 393px;
             border: 2px solid #ffafcc;
             display: flex;
             flex-direction: row;
@@ -93,24 +93,27 @@
         }
         .item {
             display: flex;
+            flex-direction: column;
             align-items: center;
             margin-top: 10px;
         }
         .item img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 5px;
             border-radius: 5px;
             object-fit: cover;
         }
         .components {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 5px;
             margin-top: 5px;
         }
         .components img {
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             border-radius: 5px;
             object-fit: cover;
         }
@@ -128,6 +131,36 @@ const champions = {
     "ambessa": {
         "image": "assets/champions/ambessa.jpg",
         "info": "Physical damage, omnivamp",
+        "items": [
+            {
+                "name": "Bloodthirster",
+                "image": "assets/items/bloodthirster.jpg",
+                "components": [
+                    "assets/components/bfsword.jpg",
+                    "assets/components/netragon_cloak.png"
+                ]
+            },
+            {
+                "name": "Titan’s Resolve",
+                "image": "assets/items/titans_resolve.png",
+                "components": [
+                    "assets/components/chain_vest.jpg",
+                    "assets/components/recurve_bow.png"
+                ]
+            },
+            {
+                "name": "Sterak’s Gage",
+                "image": "assets/items/steraks_gage.jpg",
+                "components": [
+                    "assets/components/bfsword.jpg",
+                    "assets/components/giants_belt.jpg"
+                ]
+            }
+        ]
+    },
+    "akali": {
+        "image": "assets/champions/akali.jpg",
+        "info": "Magic damage",
         "items": [
             {
                 "name": "Bloodthirster",
@@ -177,12 +210,10 @@ function searchChampion() {
                         ${champ.items.map(item => `
                             <div class="item">
                                 <img src="${item.image}" alt="${item.name}">
-                                <div>
-                                    <b>${item.name}</b>
-                                    <div class="components">
-                                        <img src="${item.components[0]}" alt="Component 1">
-                                        <img src="${item.components[1]}" alt="Component 2">
-                                    </div>
+                                <b>${item.name}</b>
+                                <div class="components">
+                                    <img src="${item.components[0]}" alt="Component 1">
+                                    <img src="${item.components[1]}" alt="Component 2">
                                 </div>
                             </div>
                         `).join('')}
