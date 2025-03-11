@@ -186,6 +186,27 @@ const champions = {
         ]
     }
 };
+
+function searchChampion() {
+    let input = document.getElementById("searchInput").value.trim().toLowerCase();
+    let resultDiv = document.getElementById("championResult");
+    resultDiv.innerHTML = "";
+
+    Object.keys(champions).forEach(champName => {
+        if (input.length >= 3 && champName.includes(input)) {
+            let champ = champions[champName];
+            let champHtml = `
+                <div class="champion-card">
+                    <div class="champion-info-container">
+                        <div class="champion-name-box">${champName.charAt(0).toUpperCase() + champName.slice(1)}</div>
+                        <img src="${champ.image}" alt="${champName}" class="champion-img">
+                        <p class="champion-info">${champ.info}</p>
+                    </div>
+                </div>`;
+            resultDiv.innerHTML += champHtml;
+        }
+    });
+}
 </script>
 
 </body>
