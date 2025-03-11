@@ -188,12 +188,12 @@ const champions = {
 };
 
 function searchChampion() {
-    let input = document.getElementById("searchInput").value.trim().toLowerCase();
+    let input = document.getElementById("searchInput").value.trim().toLowerCase().split(" ");
     let resultDiv = document.getElementById("championResult");
     resultDiv.innerHTML = "";
 
     Object.keys(champions).forEach(champName => {
-        if (input.length >= 3 && champName.includes(input)) {
+        if (input.some(searchTerm => searchTerm.length >= 3 && champName.includes(searchTerm))) {
             let champ = champions[champName];
             let champHtml = `
                 <div class="champion-card">
