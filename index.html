@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Champion Search</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Shrikhand&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+        }
+        h2 {
+            color: #a2d2ff;
+            font-family: 'Shrikhand', cursive;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            padding: 10px;
+            width: 320px;
+            border: 2px solid #a2d2ff;
+            border-radius: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align: center;
+        }
+        .champion-card {
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+            width: 280px;
+            position: relative;
+            border: 2px solid #ffafcc; /* Cute pastel pink border */
+        }
+        .champion-name-box {
+            background: #ffafcc; /* Cute pastel pink */
+            color: white;
+            text-align: center;
+            padding: 5px;
+            font-size: 22px;
+            font-weight: bold;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+        .champion-img {
+            width: 100px; /* Smaller size */
+            display: block;
+            margin: 10px auto 10px auto; /* Position under the name box */
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .item {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .item img {
+            width: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .components {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        .components img {
+            width: 40px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Search Champion 🔍</h2>
+<input type="text" class="search-box" id="searchInput" placeholder="Type champion name..." onkeyup="searchChampion()">
+
+<div id="championResult"></div>
+
+<script>
+const champions = {
+    "ambessa": {
+        "image": "https://i.imgur.com/9FNqUsQ.jpeg",
+        "items": [
+            {
+                "name": "Bloodthirster",
+                "image": "https://i.imgur.com/9FNqUsQ.jpeg",
+                "components": [
+                    "https://i.imgur.com/9FNqUsQ.jpeg",
+                    "https://i.imgur.com/9FNqUsQ.jpeg"
+                ]
+            },
+            {
+                "name": "Titan’s Resolve",
+                "image": "https://i.imgur.com/9FNqUsQ.jpeg",
+                "components": [
+                    "https://i.imgur.com/9FNqUsQ.jpeg",
+                    "https://i.imgur.com/9FNqUsQ.jpeg"
+                ]
+            },
+            {
+                "name": "Sterak’s Gage",
+                "image": "https://i.imgur.com/9FNqUsQ.jpeg",
+                "components": [
+                    "https://i.imgur.com/9FNqUsQ.jpeg",
+                    "https://i.imgur.com/9FNqUsQ.jpeg"
+                ]
+            }
+        ]
+    }
+};
+
+function searchChampion() {
+    let input = document.getElementById("searchInput").value.trim().toLowerCase();
+    let resultDiv = document.getElementById("championResult");
+    resultDiv.innerHTML = ""; // Clear previous result
+
+    console.log("Searching for:", input);
+
+    if (champions.hasOwnProperty(input)) {
+        let champ = champions[input];
+        let champHtml = `
+            <div class="champion-card">
+                <div class="champion-name-box">${input.charAt(0).toUpperCase() + input.slice(1)}</div>
+                <img src="${champ.image}" alt="${input}" class="champion-img">
+                <h4>Recommended Items</h4>
+        `;
+
+        champ.items.forEach(item => {
+            champHtml += `
+                <div class="item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div>
+                        <b>${item.name}</b>
+                        <div class="components">
+                            <img src="${item.components[0]}" alt="Component 1">
+                            <img src="${item.components[1]}" alt="Component 2">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        champHtml += `</div>`;
+        resultDiv.innerHTML = champHtml;
+    } else {
+        console.log("Champion not found");
+    }
+}
+</script>
+
+</body>
+</html>
