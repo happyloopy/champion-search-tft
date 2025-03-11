@@ -84,38 +84,42 @@
             width: 50%;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start; /* Left-align everything */
         }
         .items-title {
             color: #a2d2ff;
             font-weight: bold;
-            font-size: 12px; /* Reduced to 50% */
+            font-size: 12px;
             margin-bottom: 5px;
+            text-align: left; /* Left-align title */
         }
         .item {
             display: flex;
             align-items: center;
             margin-top: 10px;
-            gap: 5px; /* Adjusted for better spacing */
+            gap: 8px;
         }
         .item img {
-            width: 25px; /* Reduced to 50% */
-            height: 25px; /* Reduced to 50% */
+            width: 25px;
+            height: 25px;
             border-radius: 5px;
             object-fit: cover;
+            align-self: flex-start; /* Ensures left alignment */
+        }
+        .item b {
+            font-size: 10px;
+            text-align: left; /* Left-align text */
         }
         .components {
             display: flex;
-            gap: 3px; /* Adjusted for better spacing */
+            gap: 5px;
+            margin-left: 33px; /* Adjust space for alignment */
         }
         .components img {
-            width: 15px; /* Reduced to 50% */
-            height: 15px; /* Reduced to 50% */
+            width: 15px;
+            height: 15px;
             border-radius: 5px;
             object-fit: cover;
-        }
-        .item b {
-            font-size: 10px; /* Reduced to 50% */
         }
     </style>
 </head>
@@ -211,10 +215,10 @@ function searchChampion() {
                             <div class="item">
                                 <img src="${item.image}" alt="${item.name}">
                                 <b>${item.name}</b>
-                                <div class="components">
-                                    <img src="${item.components[0]}" alt="Component 1">
-                                    <img src="${item.components[1]}" alt="Component 2">
-                                </div>
+                            </div>
+                            <div class="components">
+                                <img src="${item.components[0]}" alt="Component 1">
+                                <img src="${item.components[1]}" alt="Component 2">
                             </div>
                         `).join('')}
                     </div>
