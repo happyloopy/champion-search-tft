@@ -47,7 +47,7 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
         .champion-info-container {
             display: flex;
@@ -85,39 +85,39 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start; /* Left-align everything */
+            margin-top: 10px; /* Added space to prevent overlap */
         }
         .items-title {
             color: #a2d2ff;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 14px; /* Restored original size */
             margin-bottom: 5px;
-            text-align: left; /* Left-align title */
+            text-align: left;
         }
         .item {
             display: flex;
             align-items: center;
             margin-top: 10px;
-            gap: 8px;
+            gap: 10px; /* Adjusted for proper spacing */
         }
         .item img {
-            width: 25px;
-            height: 25px;
+            width: 50px; /* Restored original size */
+            height: 50px;
             border-radius: 5px;
             object-fit: cover;
-            align-self: flex-start; /* Ensures left alignment */
         }
         .item b {
-            font-size: 10px;
-            text-align: left; /* Left-align text */
+            font-size: 12px; /* Restored original size */
+            text-align: left;
         }
         .components {
             display: flex;
             gap: 5px;
-            margin-left: 33px; /* Adjust space for alignment */
+            margin-left: 60px; /* Adjusted for better alignment */
         }
         .components img {
-            width: 15px;
-            height: 15px;
+            width: 30px; /* Restored original size */
+            height: 30px;
             border-radius: 5px;
             object-fit: cover;
         }
