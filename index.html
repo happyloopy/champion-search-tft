@@ -89,114 +89,599 @@
         .items-title {
             color: #a2d2ff;
             font-weight: bold;
-            font-size: 12px; /* Reduced to 50% */
+            font-size: 12px;
             margin-bottom: 5px;
         }
         .item {
             display: flex;
             align-items: center;
             margin-top: 10px;
-            gap: 5px; /* Adjusted for better spacing */
+            gap: 5px;
         }
         .item img {
-            width: 25px; /* Reduced to 50% */
-            height: 25px; /* Reduced to 50% */
+            width: 25px;
+            height: 25px;
             border-radius: 5px;
             object-fit: cover;
         }
         .components {
             display: flex;
-            gap: 3px; /* Adjusted for better spacing */
+            gap: 3px;
         }
         .components img {
-            width: 15px; /* Reduced to 50% */
-            height: 15px; /* Reduced to 50% */
+            width: 15px;
+            height: 15px;
             border-radius: 5px;
             object-fit: cover;
         }
         .item b {
-            font-size: 10px; /* Reduced to 50% */
+            font-size: 10px;
         }
     </style>
 </head>
 <body>
 
-<h2>Search Champion 🔍</h2>
-<input type="text" class="search-box" id="searchInput" placeholder="Type champion name(s)..." onkeyup="searchChampion()">
+<h2>Search Champion or Artifact 🔍</h2>
+<input type="text" class="search-box" id="searchInput" placeholder="Type champion or artifact name(s)..." onkeyup="searchChampion()">
 
 <div id="championResult" class="champion-container"></div>
 
 <script>
+
+// ✅ Store all items separately to avoid re-typing in champions
+const items = {
+    "bloodthirster": {
+        "name": "Bloodthirster - S",
+        "image": "assets/items/bloodthirster.jpg",
+        "components": ["assets/components/bfsword.jpg", "assets/components/netragon_cloak.png"]
+    },
+    "titans_resolve": {
+        "name": "Titan’s Resolve - A",
+        "image": "assets/items/titans_resolve.png",
+        "components": ["assets/components/chain_vest.jpg", "assets/components/recurve_bow.png"]
+    },
+    "steraks_gage": {
+        "name": "Sterak’s Gage - B",
+        "image": "assets/items/steraks_gage.jpg",
+        "components": ["assets/components/bfsword.jpg", "assets/components/giants_belt.jpg"]
+    },
+    "jeweled_gauntlet": {
+        "name": "Jeweled Gauntlet - S",
+        "image": "assets/items/jeweled_gauntlet.jpg",
+        "components": ["assets/components/spare_gloves.jpg", "assets/components/needlessly_large_rod.jpg"]
+    },
+    "hand_of_justice": {
+        "name": "Hand of Justice - S",
+        "image": "assets/items/hand_of_justice.jpg",
+        "components": ["assets/components/spare_gloves.jpg", "assets/components/tear_goddess.jpg"]
+    },
+    "warmogs_armor": {
+        "name": "Warmog's Armor - S",
+        "image": "assets/items/warmogs_armor.jpg",
+        "components": ["assets/components/giants_belt.jpg", "assets/components/giants_belt.jpg"]
+    },
+    "dragons_claw": {
+        "name": "Dragon's Claw - A",
+        "image": "assets/items/dragons_claw.jpg",
+        "components": ["assets/components/netragon_cloak.png", "assets/components/netragon_cloak.png"]
+    },
+    "gargoyle_stoneplate": {
+        "name": "Gargoyle Stoneplate - S",
+        "image": "assets/items/gargoyle_stoneplate.png",
+        "components": ["assets/components/chain_vest.jpg", "assets/components/netragon_cloak.png"]
+    },
+    "bramble_vest": {
+        "name": "Bramble Vest - A",
+        "image": "assets/items/bramble_vest.png",
+        "components": ["assets/components/chain_vest.jpg", "assets/components/chain_vest.jpg"]
+    },
+    "ionic_spark": {
+        "name": "Ionic Spark - A",
+        "image": "assets/items/ionic_spark.png",
+        "components": ["assets/components/chain_vest.jpg", "assets/components/netragon_cloak.png"]
+    },
+    "blue_buff": {
+        "name": "Blue Buff - B",
+        "image": "assets/items/blue_buff.jpg",
+        "components": ["assets/components/tear_goddess.jpg", "assets/components/tear_goddess.jpg"]
+    },
+    "infinity_edge": {
+        "name": "Infinity Edge - S",
+        "image": "assets/items/infinity_edge.png",
+        "components": ["assets/components/bfsword.jpg", "assets/components/spare_gloves.jpg"]
+    },
+    "death_blade": {
+        "name": "Deathblade",
+        "image": "assets/items/death_blade.jpg",
+        "components": ["assets/components/bfsword.jpg", "assets/components/bfsword.jpg"]
+    },
+    "spear_of_shojin": {
+        "name": "Spear of Shojin - S",
+        "image": "assets/items/spear_of_shojin.png",
+        "components": ["assets/components/bfsword.jpg", "assets/components/tear_goddess.jpg"]
+    },
+    "last_whisper": {
+        "name": "Last Whisper - A",
+        "image": "assets/items/last_whisper.png",
+        "components": ["assets/components/recurve_bow.png", "assets/components/spare_gloves.jpg"]
+    },
+    "giant_slayer": {
+        "name": "Giant Slayer - A",
+        "image": "assets/items/giant_slayer.png",
+        "components": ["assets/components/recurve_bow.png", "assets/components/bfsword.jpg"]
+    },
+    "guinsoo_rageblade": {
+        "name": "Guinsoo's Rageblade - S",
+        "image": "assets/items/guinsoo_rageblade.jpg",
+        "components": ["assets/components/recurve_bow.png", "assets/components/needlessly_large_rod.jpg"]
+    },
+    "thief_gloves": {
+        "name": "Thief's Gloves - S",
+        "image": "assets/items/thief_gloves.png",
+        "components": ["assets/components/spare_gloves.jpg", "assets/components/spare_gloves.jpg"]
+    },
+    "sunfire_cape": {
+        "name": "Sunfire Cape - S",
+        "image": "assets/items/sunfire_cape.png",
+        "components": ["assets/components/giants_belt.jpg", "assets/components/chain_vest.jpg"]
+    },
+    "redemption": {
+        "name": "Redemption - A",
+        "image": "assets/items/redemption.png",
+        "components": ["assets/components/giants_belt.jpg", "assets/components/tear_goddess.jpg"]
+    },
+    "guardbreaker": {
+        "name": "Guardbreaker- A",
+        "image": "assets/items/guardbreaker.png",
+        "components": ["assets/components/giants_belt.jpg", "assets/components/spare_gloves.jpg"]
+    },
+    "evenshroud": {
+        "name": "Evenshroud - B",
+        "image": "assets/items/evenshroud.png",
+        "components": ["assets/components/giants_belt.jpg", "assets/components/netragon_cloak.png"]
+    },
+    "nashors_tooth": {
+        "name": "Nashor's Tooth - A",
+        "image": "assets/items/nashors_tooth.png",
+        "components": ["assets/components/giants_belt.jpg", "assets/components/recurve_bow.png"]
+    },
+    "red_buff": {
+        "name": "Red Buff - B",
+        "image": "assets/items/red_buff.png",
+        "components": ["assets/components/recurve_bow.png", "assets/components/recurve_bow.png"]
+    },
+    "archangel_staff": {
+        "name": "Archangel's Staff - A",
+        "image": "assets/items/ar_staff.png",
+        "components": ["assets/components/needlessly_large_rod.jpg", "assets/components/tear_goddess.jpg"]
+    },
+    "hextech_gunblade": {
+        "name": "Hextech Gunblade - B",
+        "image": "assets/items/hextech_gunblade.png",
+        "components": ["assets/components/needlessly_large_rod.jpg", "assets/components/bfsword.jpg"]
+    },
+    "rabadons_deathcap": {
+        "name": "Rabadon's Deathcap - B",
+        "image": "assets/items/rabadon.png",
+        "components": ["assets/components/needlessly_large_rod.jpg", "assets/components/needlessly_large_rod.jpg"]
+    },
+    "steadfast_heart": {
+        "name": "Steadfast Heart - B",
+        "image": "assets/items/steadfast_heart.png",
+        "components": ["assets/components/chain_vest.jpg", "assets/components/spare_gloves.jpg"]
+    },
+    "edge_of_night": {
+        "name": "Edge of Night - B",
+        "image": "assets/items/edge_of_night.png",
+        "components": ["assets/components/bfsword.jpg", "assets/components/chain_vest.jpg"]
+    },
+    "crownguard": {
+        "name": "Crownguard - B",
+        "image": "assets/items/crownguard.png",
+        "components": ["assets/components/needlessly_large_rod.jpg", "assets/components/chain_vest.jpg"]
+    },
+    "protectors_vow": {
+        "name": "Protector's Vow - B",
+        "image": "assets/items/protectors_vow.png",
+        "components": ["assets/components/chain_vest.jpg", "assets/components/tear_goddess.jpg"]
+    },
+    "adaptive_helm": {
+        "name": "Adaptive Helm - B",
+        "image": "assets/items/adaptive_helm.png",
+        "components": ["assets/components/netragon_cloak.png", "assets/components/tear_goddess.jpg"]
+    },
+    "statikk_shiv": {
+        "name": "Statikk Shiv - B",
+        "image": "assets/items/statikk_shiv.png",
+        "components": ["assets/components/recurve_bow.png", "assets/components/tear_goddess.jpg"]
+    },
+    "quicksilver": {
+        "name": "Quicksilver - B",
+        "image": "assets/items/quicksilver.png",
+        "components": ["assets/components/spare_gloves.jpg", "assets/components/netragon_cloak.png"]
+    },
+    "morellonomicon": {
+        "name": "Morellonomicon - B",
+        "image": "assets/items/morell.png",
+        "components": ["assets/components/needlessly_large_rod.jpg", "assets/components/giants_belt.jpg"]
+    },
+    "runaans_hurricane": {
+        "name": "Runaan's Hurricane - C",
+        "image": "assets/items/runnans_hurricane.png",
+        "components": ["assets/components/netragon_cloak.png", "assets/components/recurve_bow.png"]
+    }
+    
+};
+
+// ✅ Champions reference only item names, making it easier to add/edit
 const champions = {
     "ambessa": {
         "image": "assets/champions/ambessa.jpg",
         "info": "Physical damage, omnivamp",
-        "items": [
-            {
-                "name": "Bloodthirster",
-                "image": "assets/items/bloodthirster.jpg",
-                "components": [
-                    "assets/components/bfsword.jpg",
-                    "assets/components/netragon_cloak.png"
-                ]
-            },
-            {
-                "name": "Titan’s Resolve",
-                "image": "assets/items/titans_resolve.png",
-                "components": [
-                    "assets/components/chain_vest.jpg",
-                    "assets/components/recurve_bow.png"
-                ]
-            },
-            {
-                "name": "Sterak’s Gage",
-                "image": "assets/items/steraks_gage.jpg",
-                "components": [
-                    "assets/components/bfsword.jpg",
-                    "assets/components/giants_belt.jpg"
-                ]
-            }
-        ]
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
     },
     "akali": {
         "image": "assets/champions/akali.jpg",
         "info": "Magic damage",
-        "items": [
-            {
-                "name": "Bloodthirster",
-                "image": "assets/items/bloodthirster.jpg",
-                "components": [
-                    "assets/components/bfsword.jpg",
-                    "assets/components/netragon_cloak.png"
-                ]
-            },
-            {
-                "name": "Titan’s Resolve",
-                "image": "assets/items/titans_resolve.png",
-                "components": [
-                    "assets/components/chain_vest.jpg",
-                    "assets/components/recurve_bow.png"
-                ]
-            },
-            {
-                "name": "Sterak’s Gage",
-                "image": "assets/items/steraks_gage.jpg",
-                "components": [
-                    "assets/components/bfsword.jpg",
-                    "assets/components/giants_belt.jpg"
-                ]
-            }
-        ]
+        "items": ["bloodthirster", "hand_of_justice", "jeweled_gauntlet", "titans_resolve"]
+    },    
+    "amumu": {
+        "image": "assets/champions/amumu.jpg",
+        "info": "reduce incoming damage, magic damage",
+        "items": ["warmogs_armor", "dragons_claw", "gargoyle_stoneplate", "bramble_vest"]
+    },
+    "blitzcrank": {
+        "image": "assets/champions/blitzcrank.jpg",
+        "info": "shield, magic damage, reduce damage",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "ionic_spark"]
+    },
+    "caitlyn": {
+        "image": "assets/champions/caitlyn.jpg",
+        "info": "4 bombs, physical + headshot damage, reduce armor and magic resist",
+        "items": ["blue_buff", "infinity_edge", "death_blade", "spear_of_shojin", "last_whisper"]
+    },
+    "camille": {
+        "image": "assets/champions/camille.jpg",
+        "info": "AD (damage type that target resists less), heal",
+        "items": ["bloodthirster", "steraks_gage", "titans_resolve", "hand_of_justice", "giant_slayer"]
+    },
+    "cassiopeia": {
+        "image": "assets/champions/cassiopeia.png",
+        "info": "magic damage",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "corki": {
+        "image": "assets/champions/corki.png",
+        "info": "missles, physical damage, reduce armor",
+        "items": ["spear_of_shojin", "last_whisper", "infinity_edge", "giant_slayer"]
+    },
+    "darius": {
+        "image": "assets/champions/darius.png",
+        "info": "spins, physical damage, heal",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
+    },
+    "draven": {
+        "image": "assets/champions/draven.png",
+        "info": "physical damage, empowered axe",
+        "items": ["guinsoo_rageblade", "last_whisper", "infinity_edge"]
+    },
+    "dr.mundo": {
+        "image": "assets/champions/dr_mundo.png",
+        "info": "deal magic damage when energized, heal, gain max health on takedown",
+        "items": ["warmogs_armor", "steadfast_heart", "dragons_claw", "gargoyle_stoneplate"]
+    },
+    "ekko": {
+        "image": "assets/champions/ekko.png",
+        "info": "deal magic damage, reduce magic resist",
+        "items": ["hand_of_justice", "ionic_spark", "crownguard", "jeweled_gauntlet"]
+    },
+    "elise": {
+        "image": "assets/champions/elise.png",
+        "info": "magic tank, stun, magic damage, heal",
+        "items": ["gargoyle_stoneplate", "dragons_claw", "warmogs_armor", "ionic_spark"]
+    },
+    "ezreal": {
+        "image": "assets/champions/ezreal.png",
+        "info": "fire a shot, physical damage",
+        "items": ["infinity_edge", "last_whisper", "runaans_hurricane", "spear_of_shojin"]
+    },
+    "gangplank": {
+        "image": "assets/champions/gangplank.png",
+        "info": "cleanse all negative effects, heal, physical damage",
+        "items": ["infinity_edge", "last_whisper", "guinsoo_rageblade", "spear_of_shojin"]
+    },
+    "garen": {
+        "image": "assets/champions/garen.png",
+        "info": "heal, shield, physical damage",
+        "items": ["warmogs_armor", "redemption", "protectors_vow", "dragons_claw"]
+    },
+    "heimerdinger": {
+        "image": "assets/champions/heimerdinger.png",
+        "info": "missles, magic damage",
+        "items": ["blue_buff", "archangel_staff", "hextech_gunblade", "guardbreaker", "jeweled_gauntlet"]
+    },
+    "illaoi": {
+        "image": "assets/champions/illaoi.png",
+        "info": "gains durability, drain health from enemies, magic damage",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "redemption", "bramble_vest", "dragons_claw"]
+    },
+    "irelia": {
+        "image": "assets/champions/irelia.png",
+        "info": "defensive stance, deal magic damage when shield expires",
+        "items": ["bloodthirster", "steraks_gage", "titans_resolve", "hand_of_justice"]
+    },
+    "jayce": {
+        "image": "assets/champions/jayce.png",
+        "info": "summon a Hextech thingy that gives AP shield to 3 cloest allies, deal physical damage",
+        "items": ["guinsoo_rageblade", "infinity_edge", "giant_slayer", "spear_of_shojin", "last_whisper"]
+    },
+    "jinx": {
+        "image": "assets/champions/jinx.png",
+        "info": "physical damage, stun/rocket",
+        "items": ["infinity_edge", "spear_of_shojin", "last_whisper"]
+    },
+    "kogmaw": {
+        "image": "assets/champions/kogmaw.png",
+        "info": "attacks deal bonus magic damage, gain stacking attack speed, gain range",
+        "items": ["guinsoo_rageblade", "archangel_staff", "hextech_gunblade"]
+    },
+    "leblanc": {
+        "image": "assets/champions/leblanc.png",
+        "info": "chain together nearest enemies, magic damage",
+        "items": ["spear_of_shojin", "morellonomicon", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "leona": {
+        "image": "assets/champions/leona.png",
+        "info": "durability, deal magic damage after",
+        "items": ["bramble_vest", "warmogs_armor", "dragons_claw", "gargoyle_stoneplate", "redemption"]
+    },
+    "loris": {
+        "image": "assets/champions/loris.png",
+        "info": "shield, redirects enemy damge, deal magic damage when shield expires",
+        "items": ["warmogs_armor", "dragons_claw", "gargoyle_stoneplate", "redemption"]
+    },
+    "lux": {
+        "image": "assets/champions/lux.png",
+        "info": "grants shield to lowest current health ally, attack deals bonus magic damage",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet", "archangel_staff"]
+    },
+    "maddie": {
+        "image": "assets/champions/maddie.png",
+        "info": "physical damage",
+        "items": ["infinity_edge", "last_whisper", "guinsoo_rageblade", "spear_of_shojin"]
+    },
+    "malzahar": {
+        "image": "assets/champions/malzahar.png",
+        "info": "magic damage, stack of infection that stack infinitely",
+        "items": ["spear_of_shojin", "morellonomicon", "rabadons_deathcap", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "mel": {
+        "image": "assets/champions/mel.png",
+        "info": "dash, gain 300 shield and grant shield to 2 allies, magic damage",
+        "items": ["nashors_tooth", "red_buff", "blue_buff", "jeweled_gauntlet", "hextech_gunblade"]
+    },
+    "mel": {
+        "image": "assets/champions/mel.png",
+        "info": "dash, gain 300 shield and grant shield to 2 allies, magic damage",
+        "items": ["nashors_tooth", "red_buff", "blue_buff", "jeweled_gauntlet", "hextech_gunblade"]
+    },
+    "mordekaiser": {
+        "image": "assets/champions/mordekaiser.png",
+        "info": "gain durability and summon claw, magic damage in a line, omnivamp",
+        "items": ["bloodthirster", "crownguard", "jeweled_gauntlet", "hand_of_justice"]
+    },
+    "morgana": {
+        "image": "assets/champions/morgana.png",
+        "info": "magic damage, reduce shields",
+        "items": ["blue_buff", "nashors_tooth", "jeweled_gauntlet", "hextech_gunblade"]
+    },
+    "nami": {
+        "image": "assets/champions/nami.png",
+        "info": "magic damage, wave that bounces",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "nocturne": {
+        "image": "assets/champions/nocturne.png",
+        "info": "physical damage",
+        "items": ["bloodthirster", "guinsoo_rageblade", "edge_of_night", "titans_resolve", "quicksilver"]
+    },
+    "nunu_willump": {
+        "image": "assets/champions/nunu_willump.png",
+        "info": "durability, magic damage, also deal max health",
+        "items": ["warmogs_armor", "protectors_vow", "dragons_claw", "bramble_vest"]
+    },
+    "powder": {
+        "image": "assets/champions/powder.png",
+        "info": "sends a monkey, take magic damage, wound and 1% burn",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "rell": {
+        "image": "assets/champions/rell.png",
+        "info": "shield, magic damage in a line, steal armor and magic resist",
+        "items": ["bramble_vest", "dragons_claw", "gargoyle_stoneplate", "redemption"]
+    },
+    "renata_glasc": {
+        "image": "assets/champions/renata_glasc.png",
+        "info": "shield allies, deal magic damage",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet", "archangel_staff"]
+    },
+    "renni": {
+        "image": "assets/champions/renni.png",
+        "info": "heals herself, stun target, deal physical damage",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage", "warmogs_armor", "dragons_claw"]
+    },
+    "rumble": {
+        "image": "assets/champions/rumble.png",
+        "info": "rain of missles, magic damage, wound and 1% burn, percent of max health, reduce healing",
+        "items": ["bloodthirster", "titans_resolve", "crownguard", "jeweled_gauntlet", "hand_of_justice"]
+    },
+    "scar": {
+        "image": "assets/champions/scar.png",
+        "info": "lobs bombs, stun, magic damage, heal",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "dragons_claw", "bramble_vest"]
+    },
+    "sett": {
+        "image": "assets/champions/sett.png",
+        "info": "slam, magic damage, stun",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "dragons_claw", "bramble_vest"]
+    },
+    "sevika": {
+        "image": "assets/champions/sevika.png",
+        "info": "slam, magic damage, stun",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
+    },
+    "silco": {
+        "image": "assets/champions/silco.png",
+        "info": "slam, magic damage, stun",
+        "items": ["spear_of_shojin", "nashors_tooth", "statikk_shiv", "jeweled_gauntlet"]
+    },
+    "singed": {
+        "image": "assets/champions/singed.png",
+        "info": "durability, grant 1 ally attack speed",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "dragons_claw", "bloodthirster", "archangel_staff", "morellonomicon"]
+    },
+    "smeech": {
+        "image": "assets/champions/smeech.png",
+        "info": "leaps towards the enemey with the fewest items, physical damage",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
+    },
+    "steb": {
+        "image": "assets/champions/steb.png",
+        "info": "heal 2 closest allies, magic damage",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "dragons_claw", "bramble_vest"]
+    },
+    "swain": {
+        "image": "assets/champions/swain.png",
+        "info": "heal, ascend, magic damage",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "crownguard", "spear_of_shojin", "jeweled_gauntlet", "guardbreaker"]
+    },
+    "tristana": {
+        "image": "assets/champions/tristana.png",
+        "info": "cannonball, physical damage, overkill damage, gain % attack speed",
+        "items": ["guinsoo_rageblade", "infinity_edge", "last_whisper"]
+    },
+    "trundle": {
+        "image": "assets/champions/trundle.png",
+        "info": "heal, physical damage, can increase base on missing health",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage", "hand_of_justice"]
+    },
+    "twisted_fate": {
+        "image": "assets/champions/twisted_fate.png",
+        "info": "restore health to ally/deal magic damage to large/stun",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "twitch": {
+        "image": "assets/champions/twitch.png",
+        "info": "gain % attack speed, infinite range, physical damage, bonus max health",
+        "items": ["guinsoo_rageblade", "infinity_edge", "last_whisper", "red_buff"]
+    },
+    "urgot": {
+        "image": "assets/champions/urgot.png",
+        "info": "physical damage, sunder enemies reduce armor, % max health shield",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
+    },
+    "vander": {
+        "image": "assets/champions/vander.png",
+        "info": "gain armor and magic resist, physical damage",
+        "items": ["gargoyle_stoneplate", "warmogs_armor", "redemption", "bloodthirster", "infinity_edge", "hand_of_justice"]
+    },
+    "vex": {
+        "image": "assets/champions/vex.png",
+        "info": "magic damage",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "vivivi": {
+        "image": "assets/champions/vi.png",
+        "info": "shield, stun, slam, physical damage",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
+    },
+    "viktor": {
+        "image": "assets/champions/viktor.png",
+        "info": "magic damage, true damage, sunder and shred, % of max health",
+        "items": ["infinity_edge", "guardbreaker", "hand_of_justice", "spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "violet": {
+        "image": "assets/champions/violet.png",
+        "info": "physical damage, magic damage",
+        "items": ["bloodthirster", "titans_resolve", "steraks_gage"]
+    },
+    "vladimir": {
+        "image": "assets/champions/vladimir.png",
+        "info": "heal, magic damage",
+        "items": ["warmogs_armor", "gargoyle_stoneplate", "redemption", "hextech_gunblade", "guinsoo_rageblade", "archangel_staff"]
+    },
+    "warwick": {
+        "image": "assets/champions/warwick.png",
+        "info": "omnivamp, attack spped, physical damage, stun",
+        "items": ["bloodthirster", "titans_resolve", "quicksilver", "steraks_gage"]
+    },
+    "zeri": {
+        "image": "assets/champions/zeri.png",
+        "info": "physical damage",
+        "items": ["guinsoo_rageblade", "infinity_edge", "last_whisper", "hextech_gunblade"]
+    },
+    "ziggs": {
+        "image": "assets/champions/ziggs.png",
+        "info": "bomb, magic damage, mini-bombs",
+        "items": ["spear_of_shojin", "nashors_tooth", "jeweled_gauntlet"]
+    },
+    "zoe": {
+        "image": "assets/champions/zoe.png",
+        "info": "launch a star, magic damage",
+        "items": ["guardbreaker", "guinsoo_rageblade", "jeweled_gauntlet", "nashors_tooth", "spear_of_shojin"]
+    },
+    "zyra": {
+        "image": "assets/champions/zyra.png",
+        "info": "vine that stuns, magic damage, bonus true damage",
+        "items": ["spear_of_shojin", "nashors_tooth", "statikk_shiv", "jeweled_gauntlet"]
+    }
+
+
+};
+
+// ✅ Artifacts have their own unique layout
+const artifacts = {
+    "rapid_firecannon": {
+        "image": "assets/items/rapid_fire.png",
+        "tier": "S",
+        "info": "Attack fighter/carry (AD/physical damage): Nocturne, Draven, Violet, Gangplank"
+    },
+    "special_cutlass": {
+        "image": "assets/items/spectral_cutlass.png",
+        "tier": "S",
+        "info": "Attack fighter/carry (AD/physical damage): Violet, Camille, Ambessa, Vi"
+    },
+    "moguls_mail": {
+        "image": "assets/items/moguls_mail.png",
+        "tier": "D",
+        "info": "frontline, heal, stack: Swain, Loris, Scar, Garen, Dr.Mundo"
+    },
+    "ludens_tempest": {
+        "image": "assets/items/ludens_tempest.png",
+        "tier": "C",
+        "info": "magic fighter/caster/tank: Powder, Twisted Fate, Moderkaiser, Rumble, Elise, Cassiopeia"
+    },
+    "talisman_of_ascension": {
+        "image": "assets/items/talisman.png",
+        "tier": "C",
+        "info": "attack tank/fighter: Moderkaiser, Renni, Jayce, Vander, Draven, Ambessa"
+    },
+    "blighting_jewel": {
+        "image": "assets/items/blighting_jewel.png",
+        "tier": "C",
+        "info": "magic caster/tank/fighter: Silco, Heimerdinger, Silco, Malzahar, Rumble, Mel"
     }
 };
 
+// ✅ Function to search champions & artifacts
 function searchChampion() {
     let input = document.getElementById("searchInput").value.trim().toLowerCase().split(" ");
     let resultDiv = document.getElementById("championResult");
     resultDiv.innerHTML = "";
 
+    // ✅ Search & Display Champions
     Object.keys(champions).forEach(champName => {
-        if (input.some(searchTerm => searchTerm.length >= 3 && champName.includes(searchTerm))) {
+        if (input.some(searchTerm => searchTerm.length >= 2 && champName.includes(searchTerm))) {
             let champ = champions[champName];
             let champHtml = `
                 <div class="champion-card">
@@ -207,23 +692,57 @@ function searchChampion() {
                     </div>
                     <div class="items-container">
                         <div class="items-title">Recommended Items</div>
-                        ${champ.items.map(item => `
-                            <div class="item">
-                                <img src="${item.image}" alt="${item.name}">
-                                <b>${item.name}</b>
-                                <div class="components">
-                                    <img src="${item.components[0]}" alt="Component 1">
-                                    <img src="${item.components[1]}" alt="Component 2">
+                        ${champ.items.map(itemKey => {
+                            let item = items[itemKey];
+                            return `
+                                <div class="item">
+                                    <img src="${item.image}" alt="${item.name}">
+                                    <b>${item.name}</b>
+                                    <div class="components">
+                                        <img src="${item.components[0]}" alt="Component 1">
+                                        <img src="${item.components[1]}" alt="Component 2">
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('')}
+                            `;
+                        }).join('')}
                     </div>
                 </div>`;
-            resultDiv.innerHTML += champHtml;
+            resultDiv.insertAdjacentHTML("beforeend", champHtml);
+        }
+    });
+
+    // ✅ Search & Display Artifacts
+    Object.keys(artifacts).forEach(artifactName => {
+        if (input.some(searchTerm => searchTerm.length >= 3 && artifactName.includes(searchTerm))) {
+            let artifact = artifacts[artifactName];
+            let artifactHtml = `
+                <div class="artifact-card" style="
+                    width: 300px; 
+                    padding: 10px; 
+                    border-radius: 15px; 
+                    background: #dff7e5;
+                    border: 2px solid #88c6a3;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 10px;">
+                    
+                    <div style="width: 60%;">
+                        <div style="background: #88c6a3; color: white; text-align: center; padding: 5px; font-size: 16px; font-weight: bold; border-radius: 12px;"> 
+                            ${artifactName.charAt(0).toUpperCase() + artifactName.slice(1)}
+                        </div>
+                        <img src="${artifact.image}" alt="${artifactName}" style="width: 60px; height: 60px; border-radius: 10px; margin-top: 5px;">
+                    </div>
+                    <div style="width: 40%; text-align: left;">
+                        <p style="font-size: 14px; font-weight: bold; color: #06402b;">Tier ${artifact.tier}</p>
+                        <p style="font-size: 12px; color: #555;">${artifact.info}</p>
+                    </div>
+                </div>`;
+            resultDiv.insertAdjacentHTML("beforeend", artifactHtml);
         }
     });
 }
 </script>
-
 </body>
 </html>
